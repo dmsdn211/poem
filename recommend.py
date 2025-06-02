@@ -1,6 +1,5 @@
 import streamlit as st
 import random
-import datetime
 
 st.set_page_config(page_title="오늘의 시 한 편 ✨", page_icon="📜")
 
@@ -9,7 +8,7 @@ st.markdown("<h1 style='text-align: center; color: #a0522d;'>📖 오늘의 시 
 st.markdown("<p style='text-align: center; color: #888;'>당신의 하루에 감성을 더해줄 시를 선물합니다 🎁</p>", unsafe_allow_html=True)
 st.markdown("---")
 
-# 🌸 시 리스트 (예시 데이터)
+# 🌸 시 리스트
 poems = [
     {
         "title": "풀꽃 🌱",
@@ -43,10 +42,15 @@ poems = [
     }
 ]
 
-# 📆 날짜 기반 시 선택 (혹은 랜덤)
-seed = int(datetime.date.today().strftime("%Y%m%d"))
-random.seed(seed)
-poem = random.choice(poems)
+# 🎲 세션 상태 초기화
+if "poem" not in st.session_state:
+    st.session_state.poem = random.choice(poems)
+
+# 🔁 버튼 클릭 시 새로운 시 선택
+if st.button("🔄 다른 시도 추천해줘!"):
+    st.session_state.poem = random.choice(poems)
+
+poem = st.session_state.poem
 
 # 📜 시 출력
 st.markdown(f"<h2 style='color: #d2691e;'>📝 {poem['title']}</h2>", unsafe_allow_html=True)
@@ -55,11 +59,6 @@ st.markdown(f"<pre style='background-color:#fff8dc; padding: 20px; border-radius
 
 # 🌈 해석 or 느낌
 st.markdown(f"<p style='font-size: 18px; color: #6a5acd;'>✨ {poem['mood']}</p>", unsafe_allow_html=True)
-
-# 🔁 새로고침 버튼 (optional)
-if st.button("🔄 다른 시도 추천해줘!"):
-    poem = random.choice(poems)
-    st.experimental_rerun()
 
 # 🎁 푸터
 st.markdown("---")
